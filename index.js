@@ -1,29 +1,6 @@
-/* ============================================================
-   Lost & Found Portal — app.js
-   Powered by Firebase Firestore (real-time, cross-device)
-   ============================================================
 
-   SETUP INSTRUCTIONS (do this once):
-   1. Go to https://console.firebase.google.com
-   2. Click "Add project" → give it a name → Continue
-   3. On the left panel click "Firestore Database" → Create database
-      → Start in TEST MODE → choose a region → Enable
-   4. On the left panel click the gear ⚙ → Project settings
-   5. Scroll down to "Your apps" → click the </> Web icon
-   6. Register the app (any nickname) → copy the firebaseConfig object
-   7. Open index.html and REPLACE the firebaseConfig values below
-      with YOUR project's values. That's it!
-   ============================================================ */
 
-// ============================================================
-// FIREBASE CONFIG — REPLACE THESE VALUES WITH YOUR OWN
-// ============================================================
- /// Import the functions you need from the SDKs you need
-//import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
+//  web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBqssAS1ckddoLfMUJ3GWgx6eIHYhAGxnY",
   authDomain: "lost-and-found-25922.firebaseapp.com",
