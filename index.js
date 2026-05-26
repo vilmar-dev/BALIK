@@ -48,6 +48,7 @@ let items      = [];   // live copy from Firestore
 let adminMode  = false;
 let formType   = 'lost';
 let editingId  = null;
+const MAX_IMAGE_SIZE_BYTES = 700 * 1024; // 700 KB safe limit for Firestore data URLs
 
 // ============================================================
 // UTILITIES
@@ -129,7 +130,11 @@ async function addItem(data) {
     return true;
   } catch (e) {
     console.error("Add failed:", e);
-    toast("Failed to save. Check your Firebase config.", "error");
+    if (e.message && e.message.includes('image') && e.message.includes('longer')) {
+      toast('Image data is too large for Firestore. Choose a smaller photo or remove it.', 'error');
+    } else {
+      toast("Failed to save. Check your Firebase config.", "error");
+    }
     return false;
   }
 }
@@ -314,12 +319,23 @@ function setFormType(type) {
 
 function previewImage(input) {
   const file = input.files[0];
-  if (!file) return;
+  const imgPreview = document.getElementById('f-image-preview');
+  if (!file) {
+    imgPreview.style.display = 'none';
+    imgPreview.src = '';
+    return;
+  }
+  if (file.size > MAX_IMAGE_SIZE_BYTES) {
+    toast('Image is too large. Please choose a file under 700 KB.', 'error');
+    input.value = '';
+    imgPreview.style.display = 'none';
+    imgPreview.src = '';
+    return;
+  }
   const reader = new FileReader();
   reader.onload = e => {
-    const img = document.getElementById('f-image-preview');
-    img.src   = e.target.result;
-    img.style.display = 'block';
+    imgPreview.src   = e.target.result;
+    imgPreview.style.display = 'block';
   };
   reader.readAsDataURL(file);
 }
@@ -332,10 +348,16 @@ async function submitPost() {
   const contactName = document.getElementById('f-contact-name').value.trim();
   const contact     = document.getElementById('f-contact').value.trim();
   const imgPreview  = document.getElementById('f-image-preview');
-  const imageData   = imgPreview.style.display !== 'none' ? imgPreview.src : '';
+  const imageInput   = document.getElementById('f-image');
+  const imageData    = imgPreview.style.display !== 'none' ? imgPreview.src : '';
+  const imageFile    = imageInput.files[0];
 
   if (!name || !location || !date || !contactName || !contact) {
     toast('Please fill in all required fields.', 'error');
+    return;
+  }
+  if (imageFile && imageFile.size > MAX_IMAGE_SIZE_BYTES) {
+    toast('Image is too large. Please choose a file under 700 KB.', 'error');
     return;
   }
 
