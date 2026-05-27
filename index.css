@@ -86,9 +86,7 @@ body {
 
 /*
   ============================================================
-  DEVELOPER: To set your logo, change the src of the <img>
-  inside .logo-circle in index.html. Example:
-    <img src="images/my-logo.png" alt="Logo"/>
+ logo lang to 
   ============================================================
 */
 .logo-circle img {
