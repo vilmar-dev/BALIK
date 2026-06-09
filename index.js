@@ -12,25 +12,25 @@ const firebaseConfig = {
   appId: "1:370310533077:web:d42f4b27fa3a5ed269b75c"
 };
 
-// ============================================================
+
 // FIREBASE INIT
-// ============================================================
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const COLLECTION = "lostfound_items";
 
-// ============================================================
+
 // STATE
-// ============================================================
-let items      = [];   // live copy from Firestore
+
+let items      = [];   
 let adminMode  = false;
 let formType   = 'lost';
 let editingId  = null;
 const MAX_IMAGE_SIZE_BYTES = 700 * 1024; // 700 KB safe limit for Firestore data URLs
 
-// ============================================================
+
 // UTILITIES
-// ============================================================
+
 function today(offset = 0) {
   const d = new Date();
   d.setDate(d.getDate() + offset);
@@ -51,9 +51,9 @@ function escHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
-// ============================================================
+
 // REAL-TIME LISTENER — updates all devices instantly
-// ============================================================
+
 function startRealtimeListener() {
   showLoadingState();
 
@@ -96,9 +96,9 @@ function showError(msg) {
   });
 }
 
-// ============================================================
+
 // FIRESTORE CRUD
-// ============================================================
+
 async function addItem(data) {
   try {
     await db.collection(COLLECTION).add({
@@ -128,9 +128,9 @@ async function updateItem(id, data) {
   }
 }
 
-// ============================================================
+
 // NAVIGATION
-// ============================================================
+
 const pageTitles = {
   browse: 'Browse Items',
   lost:   'Lost Items',
@@ -148,9 +148,9 @@ function showPage(page, btn) {
   renderAll();
 }
 
-// ============================================================
+
 // STATS
-// ============================================================
+
 function updateStats() {
   const active      = items.filter(i => i.status !== 'removed');
   const lostCount   = active.filter(i => i.type === 'lost'  && i.status !== 'claimed').length;
@@ -163,9 +163,9 @@ function updateStats() {
   document.getElementById('itemCount').textContent    = active.length;
 }
 
-// ============================================================
+
 // RENDER CARDS
-// ============================================================
+
 function renderCards(page) {
   let filtered = items.filter(i => i.status !== 'removed');
   const gridId  = page + '-grid';
@@ -259,9 +259,9 @@ function cardHTML(item) {
   </div>`;
 }
 
-// ============================================================
+
 // RENDER ALL
-// ============================================================
+
 function renderAll() {
   updateStats();
   renderCards('browse');
@@ -271,9 +271,9 @@ function renderAll() {
   renderAdmin();
 }
 
-// ============================================================
+
 // POST MODAL
-// ============================================================
+
 function openPostModal(type) {
   editingId = null;
   setFormType(type || 'lost');
@@ -361,9 +361,9 @@ async function submitPost() {
   if (ok) closeModal('postModal');
 }
 
-// ============================================================
+
 // DETAIL MODAL
-// ============================================================
+
 function showDetail(id) {
   const item = items.find(i => i.id === id);
   if (!item) return;
@@ -401,9 +401,9 @@ function showDetail(id) {
   openModal('detailModal');
 }
 
-// ============================================================
+
 // ITEM ACTIONS (write to Firestore → listener updates all devices)
-// ============================================================
+
 async function claimItem(id) {
   const item = items.find(i => i.id === id);
   if (!item || item.status === 'claimed') return;
@@ -426,15 +426,13 @@ async function removeItem(id) {
   if (ok) toast('Post removed.', 'error');
 }
 
-// ============================================================
-// ADMIN CREDENTIALS — change these to your own
-// ============================================================
-const ADMIN_EMAIL    = "******";   // ← change this
-const ADMIN_PASSWORD = "******";                // ← change this
 
-// ============================================================
-// ADMIN PANEL
-// ============================================================
+const ADMIN_EMAIL    = "******";  
+const ADMIN_PASSWORD = "******";        
+
+
+
+
 
 // Called when the "Admin Mode" button is clicked
 function toggleAdminMode() {
@@ -573,9 +571,9 @@ function renderAdmin() {
   }).join('');
 }
 
-// ============================================================
+
 // MODAL HELPERS
-// ============================================================
+
 function openModal(id) {
   document.getElementById(id).classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -588,9 +586,9 @@ document.querySelectorAll('.modal-overlay').forEach(o => {
   o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
 });
 
-// ============================================================
+
 // TOAST NOTIFICATIONS
-// ============================================================
+
 function toast(msg, type = 'info') {
   const t = document.createElement('div');
   t.className = `toast ${type}`;
@@ -600,9 +598,9 @@ function toast(msg, type = 'info') {
   setTimeout(() => t.remove(), 3200);
 }
 
-// ============================================================
+
 // SIDEBAR TOGGLE (mobile)
-// ============================================================
+
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sidebarOverlay').classList.toggle('open');
@@ -615,9 +613,9 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
   btn.addEventListener('click', () => { if (window.innerWidth <= 700) closeSidebar(); });
 });
 
-// ============================================================
+
 // INIT — start listening to Firestore
-// ============================================================
+
 startRealtimeListener();   
 
 
