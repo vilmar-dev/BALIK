@@ -427,8 +427,9 @@ async function removeItem(id) {
 }
 
 
-const ADMIN_EMAIL    = "******";  
-const ADMIN_PASSWORD = "******";        
+//drop here
+
+
 
 
 
